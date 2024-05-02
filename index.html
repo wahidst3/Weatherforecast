@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=S, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Input City name" spellcheck="false">
+            <button onclick=" checkWeather()"><img src="images/search.png" alt=""></button>
+        </div>
+        <div class="error"><p>Invalid City Name</p></div>
+        <div class="weather"><img class="weather-icon" src="images/rain.png" alt="">
+            <h1 class="temp">22 °C</h1>
+            <h2 class="city">Karachi</h2>
+        <div class="details">
+            <div class="col1"><img src="images/humidity.png" alt=""><div><p class="humidity">50%</p>
+            <p>Humidity</p>
+            </div></div>
+            <div class="col1"><img src="images/wind.png" alt=""><div><p class="wind">15km/hr</p>
+                <p>Wind</p>
+                </div></div>
+        </div>
+        </div>
+    </div>
+
+    <script>
+        
+        const apiKey='0dcb22e866a2f60584b34abc09ef03b0';
+        const apiUrl=`https://api.openweathermap.org/data/2.5/weather?units=metric&q=`;
+        let icon=  document.querySelector('.weather-icon') 
+        const searchBox=document.querySelector('.search input');
+        const searchBtm=document.querySelector('.search button')
+        searchBtm.addEventListener('click',()=>{
+            checkWeather(searchBox.value)
+        })
+        async function checkWeather(city){
+            const response= await fetch(apiUrl+city+`&appid=${apiKey}`);
+            var data =await response.json();
+            console.log(data)
+        if(response.status==404){
+            document.querySelector('.error').style.display='block';
+            document.querySelector('.weather').style.display='none'
+        }else{
+            document.querySelector('.city').innerHTML=searchBox.value.toUpperCase().slice(0,1)+searchBox.value.toLowerCase().slice(1);
+           
+            document.querySelector('.temp').innerHTML=Math.round(data.main.temp)+'°C';
+            document.querySelector('.humidity').innerHTML=data.main.humidity;
+            document.querySelector('.wind').innerHTML=data.wind.speed+'Km/hr';
+                       
+            let weatherCondition = data.weather[0].main.toLowerCase();
+  icon.src = `images/${weatherCondition}.png`;   
+
+document.querySelector('.weather').style.display='block';
+document.querySelector('.error').style.display='none';
+}
+
+        }
+    
+       
+    </script>
+</body>
+</html>
